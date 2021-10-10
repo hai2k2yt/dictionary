@@ -1,5 +1,3 @@
-package dictionary;
-
 import java.util.ArrayList;
 
 public class Dictionary {
