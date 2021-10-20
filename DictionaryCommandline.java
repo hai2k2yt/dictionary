@@ -1,3 +1,5 @@
+package Dictionary;
+
 import java.io.FileNotFoundException;
 import java.util.Optional;
 import java.util.Scanner;
@@ -62,7 +64,7 @@ public class DictionaryCommandline {
      *
      * @param args
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         DictionaryManagement.insertFromFile();
         dictionarySearcher();
     }

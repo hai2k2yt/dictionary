@@ -1,10 +1,14 @@
+package Dictionary;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Scanner;
 
+
 public class DictionaryManagement {
+
     /**
      * kiểm tra xem string có rỗng.
      */
@@ -26,45 +30,57 @@ public class DictionaryManagement {
     /**
      * hàm nhập từ file.
      */
-    public static void insertFromFile() throws FileNotFoundException {
-        File text = new File("D:\\LTHDT\\DictionaryDevelopment\\src\\dictionary\\dictionary.txt");
-        Scanner file = new Scanner(text);
-        String a = file.nextLine();
-        String target;
-        while(file.hasNextLine()) {
-            if (!empty(a)) {
-                target = a;
-            }
-            else {
-                target = file.nextLine();
-            }
-            if (empty(target)) continue;
-            String explain = "";
-            Word newWord = new Word();
 
-            if(target.charAt(0) == '@') {
-                target = target.substring(1);
-                newWord.setWord_target(target);
-                a = file.nextLine();
-                if (empty(a)) continue;
-
-                while (a.charAt(0) != '@') {
-                    explain = explain + a + '\n';
-                    if (!file.hasNextLine()) break;
-                    a = file.nextLine();
-                    if (empty(a)) break;
+    /**
+     * add: đặt ngoại lệ vào try-catch
+     */
+    public static void insertFromFile() {
+        try {
+            File text = new File("src/Dictionary/dictionary.txt");
+            Scanner file = new Scanner(text);
+            String a = file.nextLine();
+            String target;
+            while(file.hasNextLine()) {
+                if (!empty(a)) {
+                    target = a;
                 }
-                newWord.setWord_explain(explain);
+                else {
+                    target = file.nextLine();
+                }
+                if (empty(target)) continue;
+                String explain = "";
+                Word newWord = new Word();
+
+                if(target.charAt(0) == '@') {
+                    target = target.substring(1);
+                    newWord.setWord_target(target);
+                    a = file.nextLine();
+                    if (empty(a)) continue;
+
+                    while (a.charAt(0) != '@') {
+                        explain = explain + a + '\n';
+                        if (!file.hasNextLine()) break;
+                        a = file.nextLine();
+                        if (empty(a)) break;
+                    }
+                    newWord.setWord_explain(explain);
+                }
+                if (!empty(newWord.getWord_explain()) && !empty(newWord.getWord_target())) {
+                    Dictionary.list.add(newWord);
+                }
             }
-            if (!empty(newWord.getWord_explain()) && !empty(newWord.getWord_target())) {
-                Dictionary.list.add(newWord);
-            }
+        }catch (FileNotFoundException f) {
+            f.printStackTrace();
+            System.exit(1);
         }
+
     }
 
     /**
      * tìm kiếm từ.
+     * chạy trên cmd
      */
+
     public static void dictionaryLookup() {
         Scanner input = new Scanner(System.in);
         String target = input.nextLine();
@@ -79,12 +95,13 @@ public class DictionaryManagement {
     /**
      * kiểm tra kết quả.
      */
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) {
         DictionaryManagement.insertFromFile();
         //System.out.println(Dictionary.list.get(0).getWord_target());
         //System.out.println(Dictionary.list.get(0).getWord_explain());
         //DictionaryManagement.insertFromCommandline();
         DictionaryManagement.dictionaryLookup();
+
         ///System.out.println(Dictionary.list.get(Dictionary.list.size() - 1).getWord_target());
         //System.out.println(Dictionary.list.get(Dictionary.list.size() - 1).getWord_explain());
     }
