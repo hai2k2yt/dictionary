@@ -3,7 +3,6 @@ package Dictionary;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileNotFoundException;
 
 public class DictionaryApplication extends JFrame implements ActionListener {
     private JTextField targetWordField;
@@ -16,6 +15,7 @@ public class DictionaryApplication extends JFrame implements ActionListener {
     private JLabel ExplainLabel;
     private JPanel mainPanel;
     private JTextArea ExplainTextArea;
+    private addMethod add_word;
 
     public DictionaryApplication() {
         initComponents();
@@ -40,6 +40,7 @@ public class DictionaryApplication extends JFrame implements ActionListener {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setContentPane(mainPanel);
         setVisible(true);
+        add_word = new addMethod();
     }
 
     private void startWordData() {
@@ -49,12 +50,12 @@ public class DictionaryApplication extends JFrame implements ActionListener {
     private void btnTranslateButtonClick() {
         ExplainLabel.setText("Explain");
         String target_word = targetWordField.getText();
-        String explain_word = DictionaryAppMethod.dictionaryLookup(target_word);
+        String explain_word = DictionaryAppMethod.translate(target_word);
         ExplainTextArea.setText(target_word + '\n' + explain_word);
     }
 
     private void btnAddButtonClick() {
-
+        add_word.setVisible(true);
     }
 
     private void btnDeleteButtonClick() {
@@ -72,7 +73,7 @@ public class DictionaryApplication extends JFrame implements ActionListener {
     private void btnSearchButtonClick() {
         ExplainLabel.setText("Search");
         String search_word = targetWordField.getText();
-        String list_word = DictionaryAppMethod.dictionarySearcher(search_word);
+        String list_word = DictionaryAppMethod.search(search_word);
         ExplainTextArea.setText(list_word);
     }
 
