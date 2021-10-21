@@ -15,19 +15,29 @@ public class DictionaryManagement {
     /**
      * hàm nhập từ commandline.
      */
-    public static void insertFromCommandline() {
+    public static boolean insertFromCommandline() {
         Scanner input = new Scanner(System.in);
         Word newWord = new Word();
-        newWord.setWord_target(input.nextLine());
-        newWord.setWord_explain(input.nextLine());
+        String target = input.nextLine();
+        for (int i = 0; i < Dictionary.list.size(); i++) {
+            if (Dictionary.list.get(i).getWord_target().equals(target)) {
+                return false;
+            }
+        }
+        String explain = input.nextLine();
+        newWord.setWord_target(target);
+        newWord.setWord_explain(explain);
         Dictionary.list.add(newWord);
+        return true;
     }
 
     /**
      * thêm từ vào file.
      */
-    public static void addWord() throws IOException {
-        DictionaryManagement.insertFromCommandline();
+    public static String dictionaryExportToFile() throws IOException {
+        if(!DictionaryManagement.insertFromCommandline()) {
+            return "Fail";
+        }
         File f = new File(path);
         FileWriter fw = new FileWriter(f, true);
         BufferedWriter br = new BufferedWriter(fw);
@@ -38,40 +48,38 @@ public class DictionaryManagement {
         br.write(Dictionary.list.get(n).getWord_explain());
         br.close();
         fw.close();
+        return "Success";
     }
 
     /**
      * xóa từ khỏi file.
      */
-    public static void deleteWord() throws IOException {
+    public static String deleteWord() throws IOException {
         Scanner input = new Scanner(System.in);
-        String target = input.nextLine();
-        int a = 0;
-        for (int i = 0; i < Dictionary.list.size(); i++) {
-            if (Dictionary.list.get(i).getWord_target().equals(target)) {
-                a = i;
-                break;
+        int n = DictionaryManagement.dictionaryLookup();
+        if (n != 1) {
+            Dictionary.list.remove(n);
+            File f = new File(path);
+
+            PrintWriter writer = new PrintWriter(f);
+            writer.print("");
+
+            FileWriter fw = new FileWriter(f, true);
+            BufferedWriter br = new BufferedWriter(fw);
+
+            br.write('@' + Dictionary.list.get(0).getWord_target() + '\n');
+            br.write(Dictionary.list.get(0).getWord_explain());
+
+            for (int i = 1; i < Dictionary.list.size(); i++) {
+                br.write('\n');
+                br.write('@' + Dictionary.list.get(i).getWord_target() + '\n');
+                br.write(Dictionary.list.get(i).getWord_explain());
             }
+            br.close();
+            writer.close();
+            return "Success";
         }
-        Dictionary.list.remove(a);
-        File f = new File(path);
-
-        PrintWriter writer = new PrintWriter(f);
-        writer.print("");
-
-        FileWriter fw = new FileWriter(f, true);
-        BufferedWriter br = new BufferedWriter(fw);
-
-        br.write('@' + Dictionary.list.get(0).getWord_target() + '\n');
-        br.write(Dictionary.list.get(0).getWord_explain());
-
-        for (int i = 1; i < Dictionary.list.size(); i++) {
-            br.write('\n');
-            br.write('@' + Dictionary.list.get(i).getWord_target() + '\n');
-            br.write(Dictionary.list.get(i).getWord_explain());
-        }
-        br.close();
-        writer.close();
+        return "Fail";
     }
 
     /**
@@ -116,16 +124,17 @@ public class DictionaryManagement {
     /**
      * tìm kiếm từ.
      */
-    public static void dictionaryLookup() {
+    public static int dictionaryLookup() {
         Scanner input = new Scanner(System.in);
         String target = input.nextLine();
+        int a = -1;
         for (int i = 0; i < Dictionary.list.size(); i++) {
             if (Dictionary.list.get(i).getWord_target().equals(target)) {
-                System.out.println(Dictionary.list.get(i).getWord_target());
-                System.out.println(Dictionary.list.get(i).getWord_explain());
+                a = i;
                 break;
             }
         }
+        return a;
     }
 
     /**
@@ -133,13 +142,9 @@ public class DictionaryManagement {
      */
     public static void main(String[] args) throws IOException {
         DictionaryManagement.insertFromFile();
-        //System.out.println(Dictionary.list.get(0).getWord_target());
-        //System.out.println(Dictionary.list.get(0).getWord_explain());
         //DictionaryManagement.insertFromCommandline();
-        //DictionaryManagement.dictionaryLookup();
-        //DictionaryManagement.addWord();
-        //DictionaryManagement.deleteWord();
-        ///System.out.println(Dictionary.list.get(Dictionary.list.size() - 1).getWord_target());
-        //System.out.println(Dictionary.list.get(Dictionary.list.size() - 1).getWord_explain());
+        //int n = DictionaryManagement.dictionaryLookup();
+        //System.out.println(DictionaryManagement.dictionaryExportToFile());
+        System.out.println(DictionaryManagement.deleteWord());
     }
 }
